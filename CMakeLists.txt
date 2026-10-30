@@ -9,7 +9,7 @@ include_directories($ENV{PICO_SDK_PATH}/src/rp2_common/pico_async_context/includ
 # we also need PICO EXTRAS
 include(pico_extras_import.cmake)
 
-project(pico-doktorhut)
+project(pico-mortarboard)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
@@ -19,16 +19,17 @@ add_compile_options(-Wall -Wextra -Wnull-dereference)
 # initialize the Pico SDK
 pico_sdk_init()
 
-add_executable(pico-doktorhut
-  src/doktorhut.cpp)
+add_executable(pico-mortarboard
+  src/pwm-audio-player.cpp
+  src/mortarboard.cpp)
 
 # pull in common dependencies
-target_link_libraries(pico-doktorhut
+target_link_libraries(pico-mortarboard
   pico_stdlib
   hardware_pwm)
 
 # create map/bin/hex file etc.
-pico_add_extra_outputs(pico-doktorhut)
+pico_add_extra_outputs(pico-mortarboard)
 
 # Local variables:
 #   mode: cmake

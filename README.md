@@ -1,4 +1,4 @@
-# Doktorhut Design
+# Mortarboard Design
 
 TODO
 
