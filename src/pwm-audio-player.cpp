@@ -1,5 +1,4 @@
 #include "pwm-audio-player.hpp"
-
 #include "hardware/pwm.h"
 
 // Pass a view (span) of the flash memory buffer to the player

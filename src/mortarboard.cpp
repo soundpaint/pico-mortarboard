@@ -1,6 +1,10 @@
+#include "mortarboard.hpp"
 #include "pwm-audio-player.hpp"
 
-int main() {
+Mortarboard::Mortarboard() {}
+
+int
+Mortarboard::run() {
     stdio_init_all();
 
     // Create and initialize the audio player instance
@@ -11,4 +15,9 @@ int main() {
     while (true) {
         tight_loop_contents();
     }
+}
+
+int main() {
+  Mortarboard mortarboard;
+  mortarboard.run();
 }
