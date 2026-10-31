@@ -65,11 +65,19 @@ PWM_audio_player::get_wee_woo_wee_woo_sample_value(const uint64_t index) const {
   return 255;
 }
 
+uint8_t
+PWM_audio_player::get_siren_sample_value(const uint64_t index) const {
+  const uint64_t cyclic_index = 0x2000 - (index & 0x1fff);
+  const uint64_t stretched_index = (cyclic_index * cyclic_index) >> 7;
+  return (stretched_index & 0x1f) < 0x10 ? 0 : 255;
+}
+
 // actual C++ instance method handling the logic
 bool
 PWM_audio_player::update_sample() {
     //const uint8_t sample_value = get_square_wave_sample_value(index_);
-    const uint8_t sample_value = get_wee_woo_wee_woo_sample_value(index_);
+    //const uint8_t sample_value = get_wee_woo_wee_woo_sample_value(index_);
+    const uint8_t sample_value = get_siren_sample_value(index_);
 
     // output sample
     pwm_set_chan_level(slice_num_, channel_, sample_value);

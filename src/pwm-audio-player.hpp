@@ -16,6 +16,7 @@ private:
     uint8_t get_sine_wave_sample_value(const uint64_t index) const;
     uint8_t get_square_wave_sample_value(const uint64_t index) const;
     uint8_t get_wee_woo_wee_woo_sample_value(const uint64_t index) const;
+    uint8_t get_siren_sample_value(const uint64_t index) const;
 
     // actual C++ instance method handling the logic
     bool update_sample();
