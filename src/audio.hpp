@@ -1,7 +1,9 @@
 #include "pico/stdlib.h"
 
 // define our hardware pin and sample rate
-inline constexpr uint AUDIO_PIN = 1;
+inline constexpr uint GPIO_PIN_AUDIO_OUT = 1;
+inline constexpr uint GPIO_PIN_WAVE_SELECT_1 = 2;
+inline constexpr uint GPIO_PIN_WAVE_SELECT_2 = 3;
 inline constexpr uint32_t SAMPLE_RATE = 8000; // 8 kHz audio
 
 /*
