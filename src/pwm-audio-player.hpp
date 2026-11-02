@@ -13,12 +13,13 @@ private:
   // GPIO initialization
   void init_audio_out_pin();
   void init_wave_selection_pins();
+  void init_wave_led_pins();
 
   // sample value generation
-  uint8_t get_sine_wave_sample_value(const uint64_t index) const;
-  uint8_t get_square_wave_sample_value(const uint64_t index) const;
-  uint8_t get_wee_woo_wee_woo_sample_value(const uint64_t index) const;
-  uint8_t get_siren_sample_value(const uint64_t index) const;
+  uint8_t update_sine_wave_sample_value(const uint64_t index);
+  uint8_t update_square_wave_sample_value(const uint64_t index);
+  uint8_t update_wee_woo_wee_woo_sample_value(const uint64_t index);
+  uint8_t update_siren_sample_value(const uint64_t index);
 
   // actual C++ instance method handling the logic
   void check_wave_selections();

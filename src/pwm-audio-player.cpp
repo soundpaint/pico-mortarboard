@@ -22,11 +22,27 @@ PWM_audio_player::init_wave_selection_pins() {
     gpio_init(GPIO_PIN_WAVE_SELECT_2);
 
     // set direction as input
+    gpio_set_dir(GPIO_PIN_WAVE_SELECT_1, GPIO_IN);
     gpio_set_dir(GPIO_PIN_WAVE_SELECT_2, GPIO_IN);
 
     // enable internal pull-down resistor
     gpio_pull_down(GPIO_PIN_WAVE_SELECT_1);
     gpio_pull_down(GPIO_PIN_WAVE_SELECT_2);
+}
+
+void
+PWM_audio_player::init_wave_led_pins() {
+    // initialize GPIO wave select pins
+    gpio_init(GPIO_PIN_WAVE_LED_1);
+    gpio_init(GPIO_PIN_WAVE_LED_2);
+
+    // set direction as input
+    gpio_set_dir(GPIO_PIN_WAVE_LED_1, GPIO_OUT);
+    gpio_set_dir(GPIO_PIN_WAVE_LED_2, GPIO_OUT);
+
+    // set drive strength to 12mA
+    //gpio_set_drive_strength(GPIO_PIN_WAVE_LED_1, GPIO_DRIVE_STRENGTH_12MA);
+    //gpio_set_drive_strength(GPIO_PIN_WAVE_LED_2, GPIO_DRIVE_STRENGTH_12MA);
 }
 
 void
@@ -37,6 +53,7 @@ PWM_audio_player::init() {
     // init GPIO pins
     init_audio_out_pin();
     init_wave_selection_pins();
+    init_wave_led_pins();
 
     // wrap at 255 so 8-bit values map directly to 0-100% duty cycle
     pwm_set_wrap(slice_num_, 255);
@@ -62,17 +79,25 @@ PWM_audio_player::timer_callback_static(repeating_timer_t* t) {
 }
 
 uint8_t
-PWM_audio_player::get_sine_wave_sample_value(const uint64_t index) const {
+PWM_audio_player::update_sine_wave_sample_value(const uint64_t index) {
     return sine_wave_audio_buffer_[index & 0x1f];
 }
 
 uint8_t
-PWM_audio_player::get_square_wave_sample_value(const uint64_t index) const {
+PWM_audio_player::update_square_wave_sample_value(const uint64_t index) {
     return square_wave_audio_buffer_[index & 0x1f];
 }
 
 uint8_t
-PWM_audio_player::get_wee_woo_wee_woo_sample_value(const uint64_t index) const {
+PWM_audio_player::update_wee_woo_wee_woo_sample_value(const uint64_t index) {
+    const uint16_t led_rem = index & 0x1fff;
+    if (led_rem == 0x0000) {
+      gpio_put(GPIO_PIN_WAVE_LED_1, true);
+      gpio_put(GPIO_PIN_WAVE_LED_2, false);
+    } else if (led_rem == 0x1000) {
+      gpio_put(GPIO_PIN_WAVE_LED_1, false);
+      gpio_put(GPIO_PIN_WAVE_LED_2, true);
+    }
     const bool phase = index & 0x1000;
     if (phase) {
         return index & 0x08 ? 0 : 255;
@@ -87,8 +112,16 @@ PWM_audio_player::get_wee_woo_wee_woo_sample_value(const uint64_t index) const {
 }
 
 uint8_t
-PWM_audio_player::get_siren_sample_value(const uint64_t index) const {
+PWM_audio_player::update_siren_sample_value(const uint64_t index) {
     const uint64_t cyclic_index = 0x2000 - (index & 0x1fff);
+    const uint16_t led_rem = index & 0x7ff;
+    if (led_rem == 0x000) {
+      gpio_put(GPIO_PIN_WAVE_LED_1, true);
+      gpio_put(GPIO_PIN_WAVE_LED_2, false);
+    } else if (led_rem == 0x400) {
+      gpio_put(GPIO_PIN_WAVE_LED_1, false);
+      gpio_put(GPIO_PIN_WAVE_LED_2, true);
+    }
     const uint64_t stretched_index = (cyclic_index * cyclic_index) >> 7;
     return (stretched_index & 0x1f) < 0x10 ? 0 : 255;
 }
@@ -106,14 +139,16 @@ PWM_audio_player::update_sample() {
         check_wave_selections();
     }
 
-    //const uint8_t sample_value = get_square_wave_sample_value(index_);
+    //const uint8_t sample_value = update_square_wave_sample_value(index_);
     const uint16_t sample_value =
-        (wave_select_1_ ? get_wee_woo_wee_woo_sample_value(index_) : 0) +
-        (wave_select_2_ ? get_siren_sample_value(index_) : 0);
+        (wave_select_1_ ? update_wee_woo_wee_woo_sample_value(index_) : 0) +
+        (wave_select_2_ ? update_siren_sample_value(index_) : 0);
+    const uint16_t scaled_sample_value =
+        (wave_select_1_ && wave_select_2_) ? sample_value >> 1 : sample_value;
 
     // output sample
     const uint8_t clamped_sample_value =
-        std::clamp(sample_value, uint16_t(0), uint16_t(255));
+        std::clamp(scaled_sample_value, uint16_t(0), uint16_t(255));
     pwm_set_chan_level(slice_num_, channel_, clamped_sample_value);
 
     index_ = index_ + 1;

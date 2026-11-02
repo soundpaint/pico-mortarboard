@@ -4,6 +4,8 @@
 inline constexpr uint GPIO_PIN_AUDIO_OUT = 1;
 inline constexpr uint GPIO_PIN_WAVE_SELECT_1 = 2;
 inline constexpr uint GPIO_PIN_WAVE_SELECT_2 = 3;
+inline constexpr uint GPIO_PIN_WAVE_LED_1 = 5;
+inline constexpr uint GPIO_PIN_WAVE_LED_2 = 6;
 inline constexpr uint32_t SAMPLE_RATE = 8000; // 8 kHz audio
 
 /*
