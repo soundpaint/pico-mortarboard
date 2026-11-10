@@ -81,10 +81,11 @@ create wave forms with 8 bit resolution.
 
 ## Wiring
 
-<img src="images/pico_wiring.jpg" alt="Pico Wiring" width="400" />
+<img src="images/circuit.svg" alt="Circuit Wiring" width="400" />
 
 * The minus pole of the two batteries in series is connected with Pico
   `GND` (pin 38 or any other `GND` pin).
+  <img src="images/pico_wiring.jpg" alt="Pico Wiring" width="400" />
 
 * The plus pole of the two batteries in series splits into two
   branches, each branch wired with one side of one switch, again
