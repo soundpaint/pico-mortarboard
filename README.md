@@ -6,6 +6,8 @@ two sounds, a sirene and a _wee-woo, wee-woo_ sound that may be played
 by pressing two push buttons.  Two blue LEDs will flash, following the
 rhythm of the sounds.
 
+<img src="images/overview.jpg" alt="Overview" width="600" />
+
 ## Usage
 
 The application features two push buttons.  Each of them serves both,
@@ -31,12 +33,14 @@ reduced volume to avoid sample clipping.
   protective resistor.  I used a speaker with roughly 100Ω and a
   protective resistor with 220Ω, resulting in a total value of roughly
   320Ω.
+  <img src="images/speaker.jpg" alt="Speaker" width="200" />
 
 * **A protective resistor** in series with the speaker, as discussed
   above.  In my case with a 100Ω speaker, I decided for a 220Ω
   resistor.
 
 * **Two push-buttons** for turning on power and starting the sound.
+  <img src="images/control-board_front.jpg" alt="Control Board (Front View)" width="400" />
 
 * **Two rectifying diodes**, such as `1N4148`.  The Pico operates at
   1.8V to 5.5V on `VSYS`.  Given to AA batteries and a voltage drop of
@@ -49,6 +53,7 @@ reduced volume to avoid sample clipping.
   not an option, since the input voltage on the `GPIO` pins must not
   exceed 3.3V for proper operation.  A voltage above 3.6V is likely to
   destroy the `GPIO` pin.
+  <img src="images/control-board_back.jpg" alt="Control Board (Back View)" width="400" />
 
 * **Two blue LEDs.** There a blue LEDs at different wave lengths and
   different brightness.  For visual reasons, be sure to choose a deep
@@ -76,6 +81,8 @@ create wave forms with 8 bit resolution.
 
 ## Wiring
 
+<img src="images/pico_wiring.jpg" alt="Pico Wiring" width="400" />
+
 * The minus pole of the two batteries in series is connected with Pico
   `GND` (pin 38 or any other `GND` pin).
 
@@ -88,6 +95,7 @@ create wave forms with 8 bit resolution.
   2` and also (via one of the two diodes) with `VSYS`.  When pressing
   the other button, the plus will be directly connected to `GPIO 3`
   and also (via the other diode) with `VSYS`.
+  <img src="images/control-board_wiring.jpg" alt="Control Board Wiring" width="400" />
 
 * On side of the series of speaker and protecting resistor is
   connected to `GPIO 1` (pin 2), and the other side to `GND` (pin 3 or
@@ -96,6 +104,7 @@ create wave forms with 8 bit resolution.
 * One of the LEDs is (in series with the current limiting resistor)
   connected to `GPIO 5` (pin 7) and `GND` (pin 8 or any other `GND`
   pin).
+  <img src="images/led_wiring.jpg" alt="LED Wiring" width="100" />
 
 * The other LEDs is (in series with the current limiting resistor)
   connected to `GPIO 6` (pin 9) and `GND` (pin 8 or any other `GND`
